@@ -152,12 +152,9 @@ main(int argc, char **argv)
 						fprintf(stderr, " %s", argv[i]);
 					fprintf(stderr, "\n");
 				}
-				rs = execve(opts.path, opts.argv, NULL);
-				if (rs == -1) {
-					perror("execve");
-					return EXIT_FAILURE;
-				}
-				return EXIT_SUCCESS;
+				(void)execve(opts.path, opts.argv, NULL);
+				perror("execve");
+				return EXIT_FAILURE;
 			}
 			else {
 				rs = waitpid(pid, &status, 0);
