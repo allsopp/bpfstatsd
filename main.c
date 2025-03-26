@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include <fcntl.h>
@@ -162,10 +163,14 @@ main(int argc, char **argv)
 					perror("waitpid");
 					return EXIT_FAILURE;
 				}
-				if (WIFSIGNALED(status))
-					fprintf(stderr, "child process terminated by signal %d\n", WTERMSIG(status));
-				else if (opts.verbose || WEXITSTATUS(status))
-					fprintf(stderr, "child process exited with exit code: %d\n", WEXITSTATUS(status));
+				if (WIFSIGNALED(status)) {
+					int sig = WTERMSIG(status);
+					const char *desc = strsignal(sig);
+					fprintf(stderr, "child process terminated by signal: %d (%s)\n", sig, desc);
+				}
+				else if (opts.verbose || WEXITSTATUS(status)) {
+					fprintf(stderr, "child process exited with exit code %d\n", WEXITSTATUS(status));
+				}
 			}
 		}
 		sleep(opts.wait);
