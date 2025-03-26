@@ -1,5 +1,4 @@
-LDFLAGS:=`pkg-config --libs libcurl`
-CFLAGS:=-g -Wall -Wextra -Wpedantic -Werror -std=c99 `pkg-config --cflags libcurl`
+CFLAGS:=-g -Wall -Wextra -Wpedantic -Werror -std=c99
 
 bpfstatsd: main.o bpf.o
 	$(CC) ${LDFLAGS} -o $@ $>
