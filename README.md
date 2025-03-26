@@ -6,10 +6,10 @@
 
 ## Description
 
-`bpfstatsd` is a background daemon that runs an arbitrary command for every N
-packets received on a network interface, using statistics gathered from the
-[Berkeley Packet Filter](https://en.wikipedia.org/wiki/Berkeley_Packet_Filter),
-which on BSD systems is the `/dev/bpf` device.
+`bpfstatsd` is a daemon that runs an arbitrary command for every N packets
+received on a network interface, using statistics gathered from the [Berkeley
+Packet Filter](https://en.wikipedia.org/wiki/Berkeley_Packet_Filter), which on
+BSD systems is the `/dev/bpf` device.
 
 For example, to output a message for every 100 packets on `em0`:
 
@@ -30,7 +30,7 @@ examples are documented in later sections.
 
 ## Caveats
 
-This program depends on the `/dev/bpf` interface and is currently only
+This software depends on the `/dev/bpf` interface and is currently only
 supported on [OpenBSD](https://www.openbsd.org/), although it may be ported to
 other operating systems in the future. See the `bpf(4)` manual page for more
 information.
@@ -57,8 +57,9 @@ To build and install the binary to `/usr/local/bin/bpfstatsd`, run:
 
     $ make && doas make install
 
-An example file suitable for `rc.d(8)` is provided in the `rc` directory of
-this distribution.
+The program runs in the foreground by default, but can be daemonized with a
+suitable `rc.d(8)` configuration. An example file is provided in the `rc`
+directory of this distribution.
 
 ## Example 1: Home automation
 
@@ -99,7 +100,7 @@ Run `bpfstatsd` to send an MQTT message for each packet on `pflog1`, e.g.
 
     $ bpfstatsd -i pflog1 /usr/local/bin/curl \
         -d '{"state": "ON"}' \
-        mqtt://localhost/zigbee2mqtt/plug1/set
+        mqtt://localhost:1883/zigbee2mqtt/plug1/set
 
 If this is all working as intended, then a connection to the device will turn
 the device on if it was previously turned off. Automatically turning _off_ the
