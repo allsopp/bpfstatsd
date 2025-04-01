@@ -132,7 +132,7 @@ main(int argc, char **argv)
 		perror("pledge");
 		return EXIT_FAILURE;
 	}
-	rs = loop(&bpf, log, &opts);
+	rs = loop(log, &bpf, &opts);
 	if (rs)
 		return EXIT_FAILURE;
 

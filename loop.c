@@ -8,7 +8,7 @@
 #include "bpf.h"
 
 int
-loop(const struct bpf *bpf, FILE *log, const struct opts *opts)
+loop(FILE *log, const struct bpf *bpf, const struct opts *opts)
 {
 	unsigned cur;
 	int rs;
@@ -16,6 +16,7 @@ loop(const struct bpf *bpf, FILE *log, const struct opts *opts)
 	unsigned prev = 0;
 
 	assert(bpf);
+	assert(log);
 	assert(opts);
 
 	fprintf(log, "monitoring for packets on %s interface\n", opts->ifname);

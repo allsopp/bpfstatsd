@@ -1,3 +1,3 @@
 #include <stdio.h>
 #include "types.h"
-int loop(const struct bpf *, FILE *, const struct opts *);
+int loop(FILE *, const struct bpf *, const struct opts *);
