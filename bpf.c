@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include <sys/types.h>
+#include <sys/time.h>
 #include <sys/ioctl.h>
 #include <net/bpf.h>
 #include <net/if.h>
@@ -40,7 +41,38 @@ bpf_lock(int fd, char *strerrbuf, size_t buflen)
 }
 
 int
-bpf_gstats(int fd, unsigned int *recv, char *strerrbuf, size_t buflen)
+bpf_immediate(int fd, unsigned value, char *strerrbuf, size_t buflen)
+{
+	int rs;
+
+	rs = ioctl(fd, BIOCIMMEDIATE, &value);
+	if (rs == 1) {
+		assert(strerrbuf);
+		strerror_r(errno, strerrbuf, buflen);
+		return 1;
+	}
+
+	return 0;
+}
+
+int
+bpf_gblen(int fd, size_t *len, char *strerrbuf, size_t buflen)
+{
+	int rs;
+
+	assert(len);
+	rs = ioctl(fd, BIOCGBLEN, len);
+	if (rs == 1) {
+		assert(strerrbuf);
+		strerror_r(errno, strerrbuf, buflen);
+		return 1;
+	}
+
+	return 0;
+}
+
+int
+bpf_gstats(int fd, unsigned *recv, char *strerrbuf, size_t buflen)
 {
 	struct bpf_stat s;
 	int rs;

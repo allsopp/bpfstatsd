@@ -35,14 +35,6 @@ supported on [OpenBSD](https://www.openbsd.org/), although it may be ported to
 other operating systems in the future. See the `bpf(4)` manual page for more
 information.
 
-The minimum (and default) wait period for packet statistics comparison is once
-per second; this value is configurable with the `-w` command-line argument but
-can only be increased. This means that the command will be triggered, at most,
-once per wait period. You can think of the `count` argument as a minimum
-threshold required to trigger the command. A possible improvement to this
-software would be to forgo the wait period entirely and run the command exactly
-once per `count` packets.
-
 The `bpfstatsd` binary requires, and is therefore installed with, `root` setuid
 privileges which are necessary to open the `/dev/bpf` device. These privileges
 are dropped at the earliest opportunity to mitigate any vulnerabilities.

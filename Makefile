@@ -1,6 +1,6 @@
 CFLAGS:=-g -Wall -Wextra -Wpedantic -Werror -std=c99
 
-bpfstatsd: main.o bpf.o
+bpfstatsd: main.o bpf.o loop.o
 	$(CC) ${LDFLAGS} -o $@ $>
 
 %.o:
