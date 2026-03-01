@@ -31,43 +31,46 @@ loop(FILE *log, const struct bpf *bpf, const struct opts *opts)
 		if (cur < prev) {
 			fprintf(log, "overflow detected\n");
 			prev = cur;
+			continue;
 		}
-		else if (cur - prev > opts->count) {
-			pid_t pid;
+		if (cur - prev < opts->count) {
+			continue;
+		}
 
-			fprintf(log, "packet count reached "
-					"(prev=%u cur=%u)\n", prev, cur);
-			prev = cur;
+		pid_t pid;
 
-			pid = fork();
-			if (pid == -1) {
-				perror("fork");
+		fprintf(log, "packet count reached "
+				"(prev=%u cur=%u)\n", prev, cur);
+		prev = cur;
+
+		pid = fork();
+		if (pid == -1) {
+			perror("fork");
+			return 1;
+		}
+		else if (pid == 0) {
+			fprintf(log, "child process started\n");
+			(void)execve(opts->path, opts->argv, NULL);
+			perror("execve");
+			return 1;
+		}
+		else {
+			int status;
+
+			rs = waitpid(pid, &status, 0);
+			if (rs == -1) {
+				perror("waitpid");
 				return 1;
 			}
-			else if (pid == 0) {
-				fprintf(log, "child process started\n");
-				(void)execve(opts->path, opts->argv, NULL);
-				perror("execve");
-				return 1;
+			if (WIFSIGNALED(status)) {
+				int sig = WTERMSIG(status);
+				const char *desc = strsignal(sig);
+				fprintf(log, "child process terminated by signal: %d (%s)\n", sig, desc);
 			}
 			else {
-				int status;
-
-				rs = waitpid(pid, &status, 0);
-				if (rs == -1) {
-					perror("waitpid");
-					return 1;
-				}
-				if (WIFSIGNALED(status)) {
-					int sig = WTERMSIG(status);
-					const char *desc = strsignal(sig);
-					fprintf(log, "child process terminated by signal: %d (%s)\n", sig, desc);
-				}
-				else {
-					fprintf(WEXITSTATUS(status) ? stderr : log,
-							"child process exited with exit code %d\n",
-							WEXITSTATUS(status));
-				}
+				fprintf(WEXITSTATUS(status) ? stderr : log,
+						"child process exited with exit code %d\n",
+						WEXITSTATUS(status));
 			}
 		}
 	}
