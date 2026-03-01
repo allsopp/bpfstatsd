@@ -21,8 +21,8 @@ usage(void)
 int
 main(int argc, char **argv)
 {
-	int rs;
-	char ch, err[256];
+	int rs, ch;
+	char err[256];
 	FILE *log;
 
 	struct bpf bpf;
@@ -33,7 +33,7 @@ main(int argc, char **argv)
 	opts.ifname = "pflog0";
 	opts.verbose = 0;
 
-	while ((ch = getopt(argc, argv, "c:hi:vw:")) != -1) {
+	while ((ch = getopt(argc, argv, "c:hi:v")) != -1) {
 		switch (ch) {
 		case 'c':
 			opts.count = strtoul(optarg, NULL, 10);
