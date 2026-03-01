@@ -46,7 +46,7 @@ bpf_immediate(int fd, unsigned value, char *strerrbuf, size_t buflen)
 	int rs;
 
 	rs = ioctl(fd, BIOCIMMEDIATE, &value);
-	if (rs == 1) {
+	if (rs == -1) {
 		assert(strerrbuf);
 		strerror_r(errno, strerrbuf, buflen);
 		return 1;
@@ -62,7 +62,7 @@ bpf_gblen(int fd, size_t *len, char *strerrbuf, size_t buflen)
 
 	assert(len);
 	rs = ioctl(fd, BIOCGBLEN, len);
-	if (rs == 1) {
+	if (rs == -1) {
 		assert(strerrbuf);
 		strerror_r(errno, strerrbuf, buflen);
 		return 1;
