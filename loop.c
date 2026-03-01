@@ -52,7 +52,7 @@ loop(FILE *log, const struct bpf *bpf, const struct opts *opts)
 			fprintf(log, "child process started\n");
 			(void)execve(opts->path, opts->argv, NULL);
 			perror("execve");
-			return 1;
+			_exit(1);
 		}
 		else {
 			int status;
