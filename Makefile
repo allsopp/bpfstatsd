@@ -4,7 +4,7 @@ bpfstatsd: main.o bpf.o loop.o
 	$(CC) ${LDFLAGS} -o $@ $>
 
 %.o:
-	$(CC) ${CFLAGS} -o $@ $>
+	$(CC) ${CFLAGS} -c -o $@ $>
 
 .PHONY: install
 install:
