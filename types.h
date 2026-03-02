@@ -1,6 +1,8 @@
 #ifndef _TYPES_H
 #define _TYPES_H
 
+#include <cstddef>
+
 struct bpf {
 	int fd;
 	size_t len;
@@ -8,7 +10,7 @@ struct bpf {
 };
 
 struct opts {
-	unsigned count;
+	unsigned long count;
 	const char *ifname;
 	const char *path;
 	char **argv;
