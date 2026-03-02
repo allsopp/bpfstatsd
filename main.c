@@ -1,7 +1,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 #include <fcntl.h>
@@ -71,10 +70,22 @@ main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
-	unveil("/dev/bpf", "r");
-	unveil("/dev/null", "rw");
-	unveil(opts.path, "x");
-	unveil(NULL, NULL);
+	if (unveil("/dev/bpf", "r")) {
+		perror("unveil");
+		return EXIT_FAILURE;
+	}
+	if (unveil("/dev/null", "rw")) {
+		perror("unveil");
+		return EXIT_FAILURE;
+	}
+	if (unveil(opts.path, "x")) {
+		perror("unveil");
+		return EXIT_FAILURE;
+	}
+	if (unveil(NULL, NULL)) {
+		perror("unveil");
+		return EXIT_FAILURE;
+	}
 
 	if (opts.verbose) {
 		log = stderr;
